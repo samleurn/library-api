@@ -1,0 +1,375 @@
+import { Router } from 'express'
+import { db } from '../database/db.js'
+let books = [
+  {
+    id: 1,
+    titulo: '1984',
+    autor: 'George Orwell',
+    genero: 'Ficção Distópica',
+    anoPublicacao: 1949,
+    paginas: 328,
+    preco: 39.9,
+    disponivel: true,
+  },
+  {
+    id: 2,
+    titulo: 'Dom Casmurro',
+    autor: 'Machado de Assis',
+    genero: 'Romance',
+    anoPublicacao: 1899,
+    paginas: 256,
+    preco: 29.9,
+    disponivel: true,
+  },
+  {
+    id: 3,
+    titulo: 'O Senhor dos Anéis: A Sociedade do Anel',
+    autor: 'J.R.R. Tolkien',
+    genero: 'Fantasia',
+    anoPublicacao: 1954,
+    paginas: 576,
+    preco: 69.9,
+    disponivel: false,
+  },
+  {
+    id: 4,
+    titulo: 'A Revolução dos Bichos',
+    autor: 'George Orwell',
+    genero: 'Sátira',
+    anoPublicacao: 1945,
+    paginas: 152,
+    preco: 24.9,
+    disponivel: true,
+  },
+  {
+    id: 5,
+    titulo: 'Orgulho e Preconceito',
+    autor: 'Jane Austen',
+    genero: 'Romance',
+    anoPublicacao: 1813,
+    paginas: 432,
+    preco: 34.9,
+    disponivel: true,
+  },
+  {
+    id: 6,
+    titulo: 'Cem Anos de Solidão',
+    autor: 'Gabriel García Márquez',
+    genero: 'Realismo Mágico',
+    anoPublicacao: 1967,
+    paginas: 417,
+    preco: 49.9,
+    disponivel: false,
+  },
+  {
+    id: 7,
+    titulo: 'A Menina que Roubava Livros',
+    autor: 'Markus Zusak',
+    genero: 'Drama Histórico',
+    anoPublicacao: 2005,
+    paginas: 480,
+    preco: 44.9,
+    disponivel: true,
+  },
+  {
+    id: 8,
+    titulo: 'O Pequeno Príncipe',
+    autor: 'Antoine de Saint-Exupéry',
+    genero: 'Infantil',
+    anoPublicacao: 1943,
+    paginas: 96,
+    preco: 19.9,
+    disponivel: true,
+  },
+  {
+    id: 9,
+    titulo: 'Harry Potter e a Pedra Filosofal',
+    autor: 'J.K. Rowling',
+    genero: 'Fantasia',
+    anoPublicacao: 1997,
+    paginas: 309,
+    preco: 39.9,
+    disponivel: true,
+  },
+  {
+    id: 10,
+    titulo: 'A Cabana',
+    autor: 'William P. Young',
+    genero: 'Drama',
+    anoPublicacao: 2007,
+    paginas: 240,
+    preco: 32.9,
+    disponivel: false,
+  },
+  {
+    id: 11,
+    titulo: 'O Alquimista',
+    autor: 'Paulo Coelho',
+    genero: 'Ficção Filosófica',
+    anoPublicacao: 1988,
+    paginas: 208,
+    preco: 29.9,
+    disponivel: true,
+  },
+  {
+    id: 12,
+    titulo: 'Moby Dick',
+    autor: 'Herman Melville',
+    genero: 'Aventura',
+    anoPublicacao: 1851,
+    paginas: 635,
+    preco: 54.9,
+    disponivel: true,
+  },
+  {
+    id: 13,
+    titulo: 'A Divina Comédia',
+    autor: 'Dante Alighieri',
+    genero: 'Poesia Épica',
+    anoPublicacao: 1320,
+    paginas: 720,
+    preco: 79.9,
+    disponivel: true,
+  },
+  {
+    id: 14,
+    titulo: 'O Conde de Monte Cristo',
+    autor: 'Alexandre Dumas',
+    genero: 'Aventura',
+    anoPublicacao: 1844,
+    paginas: 1276,
+    preco: 89.9,
+    disponivel: false,
+  },
+  {
+    id: 15,
+    titulo: 'O Hobbit',
+    autor: 'J.R.R. Tolkien',
+    genero: 'Fantasia',
+    anoPublicacao: 1937,
+    paginas: 310,
+    preco: 39.9,
+    disponivel: true,
+  },
+  {
+    id: 16,
+    titulo: 'Crime e Castigo',
+    autor: 'Fiódor Dostoiévski',
+    genero: 'Romance Psicológico',
+    anoPublicacao: 1866,
+    paginas: 671,
+    preco: 59.9,
+    disponivel: false,
+  },
+  {
+    id: 17,
+    titulo: 'A Ilíada',
+    autor: 'Homero',
+    genero: 'Épico',
+    anoPublicacao: -800,
+    paginas: 704,
+    preco: 69.9,
+    disponivel: true,
+  },
+  {
+    id: 18,
+    titulo: 'Odisseia',
+    autor: 'Homero',
+    genero: 'Épico',
+    anoPublicacao: -750,
+    paginas: 560,
+    preco: 64.9,
+    disponivel: true,
+  },
+  {
+    id: 19,
+    titulo: 'O Nome da Rosa',
+    autor: 'Umberto Eco',
+    genero: 'Romance Histórico',
+    anoPublicacao: 1980,
+    paginas: 592,
+    preco: 55.9,
+    disponivel: true,
+  },
+  {
+    id: 20,
+    titulo: 'It: A Coisa',
+    autor: 'Stephen King',
+    genero: 'Terror',
+    anoPublicacao: 1986,
+    paginas: 1104,
+    preco: 79.9,
+    disponivel: false,
+  },
+  {
+    id: 21,
+    titulo: 'O Silmarillion',
+    autor: 'J.R.R. Tolkien',
+    genero: 'Fantasia',
+    anoPublicacao: 1977,
+    paginas: 480,
+    preco: 59.9,
+    disponivel: true,
+  },
+  {
+    id: 22,
+    titulo: 'As Crônicas de Nárnia',
+    autor: 'C.S. Lewis',
+    genero: 'Fantasia',
+    anoPublicacao: 1956,
+    paginas: 768,
+    preco: 69.9,
+    disponivel: true,
+  },
+  {
+    id: 23,
+    titulo: 'Drácula',
+    autor: 'Bram Stoker',
+    genero: 'Terror',
+    anoPublicacao: 1897,
+    paginas: 418,
+    preco: 42.9,
+    disponivel: true,
+  },
+  {
+    id: 24,
+    titulo: 'Frankenstein',
+    autor: 'Mary Shelley',
+    genero: 'Terror Gótico',
+    anoPublicacao: 1818,
+    paginas: 280,
+    preco: 37.9,
+    disponivel: true,
+  },
+  {
+    id: 25,
+    titulo: 'O Morro dos Ventos Uivantes',
+    autor: 'Emily Brontë',
+    genero: 'Romance',
+    anoPublicacao: 1847,
+    paginas: 416,
+    preco: 39.9,
+    disponivel: false,
+  },
+  {
+    id: 26,
+    titulo: 'Os Miseráveis',
+    autor: 'Victor Hugo',
+    genero: 'Romance Histórico',
+    anoPublicacao: 1862,
+    paginas: 1463,
+    preco: 99.9,
+    disponivel: true,
+  },
+  {
+    id: 27,
+    titulo: 'O Retrato de Dorian Gray',
+    autor: 'Oscar Wilde',
+    genero: 'Ficção Filosófica',
+    anoPublicacao: 1890,
+    paginas: 288,
+    preco: 34.9,
+    disponivel: true,
+  },
+  {
+    id: 28,
+    titulo: 'O Velho e o Mar',
+    autor: 'Ernest Hemingway',
+    genero: 'Novela',
+    anoPublicacao: 1952,
+    paginas: 127,
+    preco: 27.9,
+    disponivel: true,
+  },
+  {
+    id: 29,
+    titulo: 'Ensaio sobre a Cegueira',
+    autor: 'José Saramago',
+    genero: 'Ficção',
+    anoPublicacao: 1995,
+    paginas: 312,
+    preco: 46.9,
+    disponivel: true,
+  },
+  {
+    id: 30,
+    titulo: 'O Apanhador no Campo de Centeio',
+    autor: 'J.D. Salinger',
+    genero: 'Romance',
+    anoPublicacao: 1951,
+    paginas: 277,
+    preco: 36.9,
+    disponivel: false,
+  },
+]
+
+const _library = Router()
+
+_library.get('/', (req, res, next) => {
+  res.send('Lib')
+})
+
+_library.get('/gender', (req, res, next) => {
+  db('gender').then((genders) => {
+    res.status(200).json({ msg: genders })
+  })
+})
+
+_library.get('/books', (req, res, next) => {
+  db('books').then((bookshelf) => {
+    res.status(200).json({ bookshelf })
+  })
+})
+
+_library.post('/book', (req, res, next) => {
+  // const book = req.body
+
+  /* {
+    id: 1,
+    titulo: '1984',
+    autor: 'George Orwell',
+    genero: 'Ficção Distópica',
+    anoPublicacao: 1949,
+    paginas: 328,
+    preco: 39.9,
+    disponivel: true,
+  }, */
+
+  /* 
+  title VARCHAR(255) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    pages INT NOT NULL,
+    publisher_year YEAR NOT NULL,
+    idgender INT NOT NULL,
+    idavailability INT NOT NULL, */
+
+  let book = [...books]
+
+  book = book.map((b) => {
+    let { titulo, autor, genero, anoPublicacao, paginas, preco, disponivel } = b
+    let idavailability
+    if (disponivel == true) {
+      idavailability = 1
+    }
+    if (disponivel == false) {
+      idavailability = 2
+    }
+
+    return {
+      title: titulo,
+      price: preco,
+      pages: paginas,
+      publisher_year: anoPublicacao,
+      idgender,
+      idavailability,
+    }
+  })
+  /* book.forEach((element) => {
+    db('gender')
+      .insert(element)
+      .then(() => {})
+  }) */
+  res.status(200).json({ msg: 'Book Inserted' })
+})
+
+export { _library }
